@@ -1,0 +1,18 @@
+Privacy QR Scanner is a free and open-source QR code and barcode scanner for Android that respects your privacy.
+
+Features:
+* Fully offline — no internet connection required
+* No tracking, no analytics, no ads
+* Scan QR codes and barcodes instantly
+* Copy scanned result to clipboard
+* Share scanned result with any app
+* Open URLs directly in browser or compatible apps
+* Vibration feedback on successful scan
+* Clean Material Design UI with dark theme
+* Supports all major formats: QR Code, EAN, UPC, Code 128, Code 39, and more
+
+Permissions:
+* CAMERA — required to scan QR codes
+* VIBRATE — for haptic feedback on scan
+
+No network permission is requested. No data leaves your device.
