@@ -3,7 +3,16 @@
 A fast, lightweight, and fully offline QR code and barcode scanner for Android. No internet permission. No tracking. No ads.
 
 ---
+## Latest Version: 1.1
 
+### Changelog
+
+**Version 1.1**
+- Animated scan line
+- Smart QR detection (URL, Email, SMS, Phone, WiFi, Location)
+- Replaced ML Kit with ZXing (fully open source, no tracking)
+- Bug fixes and improvements
+- 
 ## Features
 
 - Scan QR codes and barcodes instantly using your camera
