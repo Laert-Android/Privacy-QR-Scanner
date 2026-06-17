@@ -39,7 +39,7 @@ No network permission is requested. No data leaves your device. No third-party S
 ## Download
 
 - [GitHub Releases](https://github.com/Laert-Android/Privacy-QR-Scanner/releases)
-- [SourceForge](https://sourceforge.net/projects/privacy-qr-scanner/files/)
+- [SourceForge](https://sourceforge.net/projects/privacy-qr-scanner)
 - F-Droid *(coming soon)*
 
 ---
