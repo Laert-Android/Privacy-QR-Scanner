@@ -13,12 +13,12 @@
 
     <!-- Scanning overlay frame -->
     <View
-        android:id="@+id/scanFrame"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:id="@+id/scanLine"
+        android:layout_width="244dp"
+        android:layout_height="3dp"
         android:layout_gravity="center"
-        android:background="@drawable/scan_frame"
-        android:layout_marginBottom="100dp"/>
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/scan_line"/>
 
     <!-- Bottom Sheet -->
     <LinearLayout

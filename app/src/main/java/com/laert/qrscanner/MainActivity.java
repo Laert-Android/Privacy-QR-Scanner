@@ -1,7 +1,6 @@
 package com.laert.qrscanner;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -28,11 +29,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.common.InputImage;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -40,6 +42,7 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
+    private View scanLine;
     private static final int CAMERA_PERMISSION_REQUEST = 100;
     private PreviewView previewView;
     private TextView tvResult;
@@ -49,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isScanned = false;
     private String lastResult = "";
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +63,13 @@ public class MainActivity extends AppCompatActivity {
         btnCopy = findViewById(R.id.btnCopy);
         btnShare = findViewById(R.id.btnShare);
         btnScanAgain = findViewById(R.id.btnScanAgain);
-        btnOpen = findViewById(R.id.btnCopy);
+        btnOpen = findViewById(R.id.btnOpen);
+        scanLine = findViewById(R.id.scanLine);
         cameraExecutor = Executors.newSingleThreadExecutor();
+
+        Log.d("QRScanner", "App started");
+
+        startScanAnimation();
 
         btnCopy.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -76,15 +83,6 @@ public class MainActivity extends AppCompatActivity {
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_TEXT, lastResult);
             startActivity(Intent.createChooser(shareIntent, "Share via"));
-        });
-
-        btnOpen.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(lastResult));
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(this, "Cannot open this link", Toast.LENGTH_SHORT).show();
-            }
         });
 
         btnScanAgain.setOnClickListener(v -> {
@@ -103,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void startScanAnimation() {
+        android.animation.ObjectAnimator animator = android.animation.ObjectAnimator.ofFloat(
+                scanLine, "translationY", -125f, 125f);
+        animator.setDuration(1500);
+        animator.setRepeatMode(android.animation.ValueAnimator.REVERSE);
+        animator.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+        animator.setInterpolator(new android.view.animation.LinearInterpolator());
+        animator.start();
+    }
+
     private void startCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
                 ProcessCameraProvider.getInstance(this);
@@ -118,7 +126,11 @@ public class MainActivity extends AppCompatActivity {
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .build();
 
-                imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> {
+                MultiFormatReader reader = new MultiFormatReader();
+
+                imageAnalysis.setAnalyzer(cameraExecutor, (ImageProxy imageProxy) -> {
+                    Log.d("QRScanner", "Analyzer running");
+
                     if (isScanned) {
                         imageProxy.close();
                         return;
@@ -126,42 +138,34 @@ public class MainActivity extends AppCompatActivity {
 
                     @SuppressWarnings("UnsafeOptInUsageError")
                     android.media.Image mediaImage = imageProxy.getImage();
+
                     if (mediaImage != null) {
-                        InputImage image = InputImage.fromMediaImage(
-                                mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+                        android.media.Image.Plane[] planes = mediaImage.getPlanes();
+                        byte[] data = new byte[planes[0].getBuffer().remaining()];
+                        planes[0].getBuffer().get(data);
 
-                        BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
-                                .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
-                                .build();
+                        int width = mediaImage.getWidth();
+                        int height = mediaImage.getHeight();
 
-                        BarcodeScanner scanner = BarcodeScanning.getClient(options);
-                        scanner.process(image)
-                                .addOnSuccessListener(barcodes -> {
-                                    if (!barcodes.isEmpty() && !isScanned) {
-                                        isScanned = true;
-                                        lastResult = barcodes.get(0).getRawValue();
-                                        runOnUiThread(() -> {
-                                            tvResult.setText(lastResult);
-                                            bottomSheet.setVisibility(View.VISIBLE);
-                                            vibrate();
-                                            // Show Open button only if result is a URL
-                                            if (lastResult.startsWith("http://") ||
-                                                    lastResult.startsWith("https://") ||
-                                                    lastResult.startsWith("yt.be") ||
-                                                    lastResult.contains("://") ||
-                                                    lastResult.matches("^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}.*")) {
-                                                btnOpen.setVisibility(View.VISIBLE);
-                                            } else {
-                                                btnOpen.setVisibility(View.GONE);
-                                            }
-                                        });
-                                    }
-                                })
-                                .addOnFailureListener(e -> e.printStackTrace())
-                                .addOnCompleteListener(task -> imageProxy.close());
-                    } else {
-                        imageProxy.close();
+                        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(
+                                data, width, height, 0, 0, width, height, false);
+                        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+                        try {
+                            Result result = reader.decode(bitmap);
+                            if (result != null && !isScanned) {
+                                isScanned = true;
+                                lastResult = result.getText();
+                                Log.d("QRScanner", "Scanned: " + lastResult);
+                                runOnUiThread(() -> handleResult(lastResult));
+                            }
+                        } catch (NotFoundException e) {
+                            Log.d("QRScanner", "No QR found in frame");
+                        } finally {
+                            reader.reset();
+                        }
                     }
+                    imageProxy.close();
                 });
 
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
@@ -172,6 +176,82 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(this));
+    }
+
+    private void handleResult(String result) {
+        tvResult.setText(result);
+        bottomSheet.setVisibility(View.VISIBLE);
+        vibrate();
+
+        if (result.startsWith("WIFI:")) {
+            btnOpen.setVisibility(View.VISIBLE);
+            btnOpen.setText("Connect WiFi");
+            btnOpen.setOnClickListener(v -> {
+                Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+                startActivity(intent);
+                Toast.makeText(this, "Open WiFi settings to connect", Toast.LENGTH_SHORT).show();
+            });
+
+        } else if (result.startsWith("tel:")) {
+            btnOpen.setVisibility(View.VISIBLE);
+            btnOpen.setText("Call");
+            btnOpen.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(result));
+                startActivity(intent);
+            });
+
+        } else if (result.startsWith("smsto:") || result.startsWith("sms:")
+                || result.startsWith("SMSTO:") || result.startsWith("SMS:")) {
+            btnOpen.setVisibility(View.VISIBLE);
+            btnOpen.setText("Send SMS");
+            btnOpen.setOnClickListener(v -> {
+                String sms = result.replaceFirst("(?i)smsto:|sms:", "");
+                String[] parts = sms.split(":");
+                String number = parts[0];
+                String message = parts.length > 1 ? parts[1] : "";
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + number));
+                intent.putExtra("sms_body", message);
+                startActivity(intent);
+            });
+
+        } else if (result.startsWith("mailto:") || result.startsWith("MAILTO:")
+                || result.contains("@")) {
+            btnOpen.setVisibility(View.VISIBLE);
+            btnOpen.setText("Send Email");
+            btnOpen.setOnClickListener(v -> {
+                String mailto = result.startsWith("mailto:") ? result : "mailto:" + result;
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(mailto));
+                startActivity(intent);
+            });
+
+        } else if (result.startsWith("geo:")) {
+            btnOpen.setVisibility(View.VISIBLE);
+            btnOpen.setText("Open Map");
+            btnOpen.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(result));
+                startActivity(intent);
+            });
+
+        } else if (result.startsWith("http://") || result.startsWith("https://")
+                || result.contains(".")) {
+            btnOpen.setVisibility(View.VISIBLE);
+            btnOpen.setText("Open");
+            btnOpen.setOnClickListener(v -> {
+                try {
+                    String url = result;
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        url = "https://" + url;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(this, "Cannot open this link", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } else {
+            btnOpen.setVisibility(View.GONE);
+        }
     }
 
     private void vibrate() {
