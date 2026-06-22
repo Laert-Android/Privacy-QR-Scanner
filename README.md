@@ -1,5 +1,12 @@
 # Privacy QR Scanner
 
+![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)
+
+
+![Version](https://img.shields.io/badge/Version-1.2-teal.svg)
+
+![Android](https://img.shields.io/badge/Android-5.0%2B-green.svg)
+
 A fast, lightweight, and fully offline QR code and barcode scanner for Android. No internet permission. No tracking. No ads.
 
 ---
