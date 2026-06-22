@@ -6,4 +6,6 @@
     <string name="share">Share</string>
     <string name="scan_again">Scan Again</string>
     <string name="open">Open</string>
+    <string name="tile_label">Scan QR Code</string>
+    <string name="tile_subtitle">Tap to scan</string>
 </resources>
