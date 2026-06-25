@@ -19,9 +19,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("qrscanner.jks")
-            storePassword
+            storePassword =xxxx
             keyAlias = "qrscanner"
-            keyPassword
+            keyPassword =xxxx
         }
     }
 
