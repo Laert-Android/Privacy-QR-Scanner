@@ -11,7 +11,7 @@ android {
         minSdk = 21
         targetSdk = 35
         versionCode = 2
-        versionName = "1.2"
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -19,9 +19,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("qrscanner.jks")
-            storePassword =xxxx
+            storePassword = "laerti4567#@"
             keyAlias = "qrscanner"
-            keyPassword =xxxx
+            keyPassword = "laerti4567#@"
         }
     }
 
