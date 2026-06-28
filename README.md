@@ -3,17 +3,23 @@
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)
 
 
-![Version](https://img.shields.io/badge/Version-1.2-teal.svg)
+![Version](https://img.shields.io/badge/Version-1.3-teal.svg)
 
 ![Android](https://img.shields.io/badge/Android-5.0%2B-green.svg)
 
 A fast, lightweight, and fully offline QR code and barcode scanner for Android. No internet permission. No tracking. No ads.
 
 ---
-## Latest Version: 1.2
+## Latest Version: 1.3
 
 ### Changelog
 
+**Version 1.3**
+-Security Update
+- New signing key (previous key was exposed in build config)
+- Signing credentials moved to local keystore.properties (not tracked by git)
+- Quick Settings Tile improvements
+- 
 **Version 1.2**
 - Added Quick Settings Tile for instant access from notification shade
 - Bug fixes and improvements
