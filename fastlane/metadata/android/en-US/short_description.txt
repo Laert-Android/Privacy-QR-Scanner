@@ -1,1 +1,1 @@
-Fast, offline QR code and barcode scanner. No tracking, no ads.
+Fast, offline QR code and barcode scanner - no tracking, no ads
