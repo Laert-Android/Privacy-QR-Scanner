@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Privacy QR Scanner</string>
+    <string name="app_name">Privacy QR and Barcode Scanner</string>
     <string name="scan_hint">Point camera at a QR code</string>
     <string name="scanned_result">Scanned Result</string>
     <string name="copy">Copy</string>

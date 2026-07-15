@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D1B2A">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate QR Code"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"/>
+
+        <EditText
+            android:id="@+id/etInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:backgroundTint="#1976D2"
+            android:layout_marginBottom="12dp"/>
+
+        <LinearLayout
+            android:id="@+id/layoutWifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/etSsid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Network name (SSID)"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA"
+                android:backgroundTint="#1976D2"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA"
+                android:backgroundTint="#1976D2"
+                android:layout_marginBottom="8dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerSecurity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"/>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnGenerate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generate"
+            android:background="@drawable/btn_copy"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"/>
+
+        <ImageView
+            android:id="@+id/ivQRCode"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnShare"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Share"
+                android:background="@drawable/btn_share"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSave"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save"
+                android:background="@drawable/btn_copy"
+                android:textColor="#FFFFFF"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
