@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PrivacyQRScanner">
+
+        <activity android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".QRScannerTileService"
             android:exported="true"
@@ -23,26 +33,21 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
-        <activity android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <!-- Disable Firebase Analytics and telemetry -->
-            <meta-data
-                android:name="firebase_analytics_collection_enabled"
-                android:value="false"/>
-            <meta-data
-                android:name="firebase_crashlytics_collection_enabled"
-                android:value="false"/>
-            <meta-data
-                android:name="google_analytics_adid_collection_enabled"
-                android:value="false"/>
-            <meta-data
-                android:name="google.firebase.measurement.MEASUREMENT_COLLECTION_ENABLED"
-                android:value="false"/>
-        </activity>
+
+        <!-- Disable Firebase Analytics and telemetry -->
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false"/>
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false"/>
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false"/>
+        <meta-data
+            android:name="google.firebase.measurement.MEASUREMENT_COLLECTION_ENABLED"
+            android:value="false"/>
+
     </application>
 
 </manifest>
