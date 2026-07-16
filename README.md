@@ -87,8 +87,8 @@ This app is built with Android Studio using Java and Gradle.
 **Clone and build:**
 
 ```bash
-git clone https://github.com/Laert-Android/Privacy-QR-Scanner.git
-cd Privacy-QR-Scanner
+git clone https://github.com/Laert-Android/Privacy-QR-And-Barcode-Scanner.git
+cd Privacy-QR-And-Barcode-Scanner
 .\gradlew assembleRelease
 ```
 
