@@ -13,6 +13,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.laert.qrscanner"
     compileSdk = 35
+
     defaultConfig {
         applicationId = "com.laert.qrscanner"
         minSdk = 21
@@ -47,6 +48,7 @@ android {
     lint {
         disable += "Instantiatable"
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
