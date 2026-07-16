@@ -3,16 +3,28 @@
 ![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)
 
 
-![Version](https://img.shields.io/badge/Version-1.3-teal.svg)
+![Version](https://img.shields.io/badge/Version-1.5-teal.svg)
 
 ![Android](https://img.shields.io/badge/Android-5.0%2B-green.svg)
 
 A fast, lightweight, and fully offline QR code and barcode scanner for Android. No internet permission. No tracking. No ads.
 
 ---
-## Latest Version: 1.3
+## Latest Version: 1.5
 
 ### Changelog
+
+**Version 1.5**
+Major update - Full Offline QR Toolkit!
+
+New features:
+
+QR Code Generator (Text, URL, WiFi, Phone, Email, SMS)
+Scan History with Copy, Share and Open options
+Bottom navigation for easy access to all features
+Renamed to Privacy QR and Barcode Scanner
+Improved barcode scanning with multi-format support
+All features work 100% offline - no internet permission
 
 **Version 1.3**
 -Security Update
