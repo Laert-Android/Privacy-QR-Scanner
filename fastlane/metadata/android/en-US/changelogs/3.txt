@@ -1,0 +1,5 @@
+QR Code Generator (Text, URL, WiFi, Phone, Email, SMS) 
+Scan History with Copy, Share and Open options Bottom navigation for easy access to all features 
+Renamed to Privacy QR and Barcode Scanner 
+Improved barcode scanning with multi-format support 
+All features work 100% offline - no internet permission
