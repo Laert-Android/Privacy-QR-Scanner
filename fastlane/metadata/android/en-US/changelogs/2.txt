@@ -2,3 +2,4 @@ Animated scan line
 Smart QR detection (URL, Email, SMS, Phone, WiFi, Location)
 Replaced ML Kit with ZXing (fully open source, no tracking)
 Bug fixes and improvements
+Added Quick Settings Tile for instant access from notification shade
