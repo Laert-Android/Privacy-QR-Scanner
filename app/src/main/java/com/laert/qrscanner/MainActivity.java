@@ -6,8 +6,30 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.FrameLayout;
 import android.view.ViewGroup;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Override
+    public void onBackPressed() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Thanks for using Privacy QR And Barcode Scanner!")
+                .setMessage("If you like this app , please share it my github project with your friends and family!\n\nHave a great day! 😊")
+                .setPositiveButton("Share", (dialog, which) -> {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT,
+                            "Check out Privacy QR and Barcode Scanner - a free, offline QR toolkit!\n" +
+                                    "No tracking, no ads, no internet permission.\n\n" +
+                                    "Download: https://github.com/Laert-Android/Privacy-QR-And-Barcode-Scanner");
+                    startActivity(Intent.createChooser(shareIntent, "Share via"));
+                })
+                .setNegativeButton("Exit", (dialog, which) -> {
+                    super.onBackPressed();
+                })
+                .setNeutralButton("Cancel", null)
+                .show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
