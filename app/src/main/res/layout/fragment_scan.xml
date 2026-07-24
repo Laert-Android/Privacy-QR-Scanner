@@ -29,6 +29,19 @@
         android:layout_marginBottom="100dp"
         android:background="@drawable/scan_line"/>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="16dp"
+        android:text="Scan from Gallery"
+        android:background="@drawable/btn_copy"
+        android:textColor="#FFFFFF"
+        android:textSize="11sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+
     <!-- Bottom Sheet -->
     <LinearLayout
         android:id="@+id/bottomSheet"

@@ -53,9 +53,14 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
+import com.google.zxing.RGBLuminanceSource;
 
 public class ScanFragment extends Fragment {
 
+    private static final int PICK_IMAGE_REQUEST = 200;
     private static final int CAMERA_PERMISSION_REQUEST = 100;
     private PreviewView previewView;
     private TextView tvResult;
@@ -75,8 +80,44 @@ public class ScanFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            try {
+                Uri imageUri = data.getData();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                        requireActivity().getContentResolver(), imageUri);
+
+                int width = bitmap.getWidth();
+                int height = bitmap.getHeight();
+                int[] pixels = new int[width * height];
+                bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+                RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
+                BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+                Result result = reader.decode(binaryBitmap);
+                if (result != null) {
+                    lastResult = result.getText();
+                    String format = result.getBarcodeFormat().toString();
+                    HistoryManager.save(requireContext(), lastResult, format);
+                    requireActivity().runOnUiThread(() -> handleResult(lastResult));
+                }
+            } catch (NotFoundException e) {
+                Toast.makeText(requireContext(), "No QR code found in image",
+                        Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(requireContext(), "Error reading image",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Button btnGallery = view.findViewById(R.id.btnGallery);
+        btnGallery.setOnClickListener(v -> scanFromGallery());
 
         previewView = view.findViewById(R.id.previewView);
         tvResult = view.findViewById(R.id.tvResult);
@@ -143,6 +184,12 @@ public class ScanFragment extends Fragment {
         hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
         reader = new MultiFormatReader();
         reader.setHints(hints);
+    }
+
+    private void scanFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     private void startScanAnimation() {
