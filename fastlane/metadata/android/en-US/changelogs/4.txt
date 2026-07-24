@@ -1,0 +1,3 @@
+What's new in v1.6:
+- Scan QR codes and barcodes from images stored on device
+- Exit dialog with share option
